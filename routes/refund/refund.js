@@ -61,13 +61,11 @@ try {
         return res.status(404).json({message: "Transaction not found"})
     }
 
-    if(!existingTransaction.status !== 'success') {
-      return res.status(403).json({message: "Unauthorized Request"});
-    }
 
 
-    const {amount,  spTxnId } = existingTransaction;
-const stringforRequest = `clientCode=${CLIENT_CODE}&amount=${amount}&spTxnId=${spTxnId}&clientTxnId=${clientTxnId}&message=${message}`;
+
+    const {amount,  sabpaisaTxnId } = existingTransaction;
+const stringforRequest = `clientCode=${CLIENT_CODE}&amount=${amount}&spTxnId=${sabpaisaTxnId}&clientTxnId=${clientTxnId}&message=${message}`;
 
 const encryptedStringForRequest = encrypt(stringforRequest);
 console.log(encryptedStringForRequest);
@@ -75,7 +73,11 @@ console.log(encryptedStringForRequest);
 const response = await axios.get(`${STAGING_REFUND_URL}?clientCode=${CLIENT_CODE}&refundQuery=${encryptedStringForRequest}`);
 
 const data = response.data;
+
+await Refund.create({...data });
 console.log(data);
+
+res.status(201).json(data)
 } catch (error) {
 
     console.log(error);
@@ -84,16 +86,17 @@ console.log(data);
 
 });
 
-router.get("/:bookingId",  async (req,res) => {
-    const bookingId = req.params.bookingId;
+router.get("/:clientTxnId",  async (req,res) => {
+    const clientTxnId = req.params.clientTxnId;
 
-    if(!bookingId) {
+    if(!clientTxnId) {
         return res.status(404).json({message:"Booking ID not found"});
     }
 
     try {
 
-        const refundBookingDetails = await Refund.findOne({booking: bookingId}).populate('booking');
+        // const refundBookingDetails = await Refund.findOne({booking: bookingId}).populate('booking');
+        const refundBookingDetails = await Refund.findOne({clientTxnId});
         if(!refundBookingDetails) {
          return res.status(404).json({message: "Booking has not been refunded yet..."});
         }

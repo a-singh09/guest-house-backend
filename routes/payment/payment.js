@@ -13,8 +13,8 @@ const Transaction = require("../../models/transaction");
 
 
 
-router.post("/makepayment", async (req, res) => {
-    const data = req.body;
+router.get("/makepayment", async (req, res) => {
+    const data = req.query;
 
     try {     
 
@@ -32,7 +32,7 @@ router.post("/makepayment", async (req, res) => {
     let clientCode = CLIENT_CODE;   
     let transUserName = USER_NAME;
     let transUserPassword = USER_PASS;
-    const callbackUrl = `${REMOTE_URL}/getPgRes`;
+    const callbackUrl = "http://127.0.0.1:3000/getPgRes";
     const channelId = CHANNEL_ID;
     const spURL = STAGING_GATEWAY_URL;
    
@@ -85,12 +85,22 @@ router.post("/makepayment", async (req, res) => {
       amount,
       channelId,
       mcc,
-      transDate
+      transDate,
+      bookingId: data.booking_id
     });
 
+    // client Txn ID
 
 
     res.render(process.cwd() + "/pg-form-request.html", { formData: formData });
+    // await axios.post(spURL, {
+    //   encData: formData.encData,
+    //   clientCode: formData.clientCode
+    // }, {
+    //   headers: {
+    //     "Content-Type" : "application/json"
+    //   }
+    // });
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: err.message });
@@ -141,9 +151,12 @@ let result = {};
     ...result, 
     [key]: value
   }
-})
+});
 
 console.log(result);
+res.json(data).end();
+
+
   });
 
 

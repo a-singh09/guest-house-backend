@@ -1,6 +1,10 @@
 const {Schema, model} = require('mongoose');
 
 const transactionSchema  = new Schema({
+
+    bookingId: {
+type: Schema.Types.ObjectId
+    },
 payerEmail: {
     required: true,
     type: String
@@ -34,15 +38,20 @@ mcc: {
     required: true
 },
 transDate: {
-    type: Date,
+    type: String,
     required: true
 },
 status: {
     type: String,
-    enum: ['success', 'failure']
 }, 
-spTxnId: {
-    type: String
+sabpaisaTxnId: {
+    type: String,
+},
+sabpaisaMessage: {
+    type:String,
+},
+paidAmount: {
+    type: Number,
 },
 paymentMode: {
 type: String
@@ -53,16 +62,15 @@ bankName: {
 },
 
 statusCode: {
-    type: String
+    type: Number
 },
-spMessage: {
-    type: String
-}, 
 
 bankErrorCode: {
     type: String
 }
 
+}, {
+    timestamps: true
 });
 
 const Transaction = model('Transaction',transactionSchema );

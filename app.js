@@ -19,6 +19,10 @@ const guestHouseRoute = require("./routes/guestHouse")
 const refundRoute = require("./routes/refund/refund");
 const paymentRoute = require("./routes/payment/payment");
 const { JWT_SECRET } = require("./config/env.config");
+const { decrypt, formatDate } = require("./utils");
+const Transaction = require("./models/transaction");
+const Booking = require("./models/booking/booking");
+
 
 app.enable('trust proxy');
 // const origins = ['http://localhost:5173',"https://guest-house-system-eight.vercel.app/"];
@@ -76,20 +80,62 @@ app.get('/logout', (req, res) => {
 });
 
 
-app.post("/getPgRes", (req, res) => {
-    let body = "";
-    req.on("data", function (data) {
-      body += data;
-      console.log("sabpaisa response :: " + body);
-      let decryptedResponse = decrypt(
-        decodeURIComponent(body.split("&")[1].split("=")[1])
-      );
-      console.log("decryptedResponse :: " + decryptedResponse);
-  
+app.post("/getPgRes", async (req, res) => {
+    console.log(req.body);
+    const data = req.body;
+    const encResponse = data.encResponse;
+   let decryptedResponse = decrypt(encResponse);
+
+   let result = {};
+   decryptedResponse.split("&").forEach((item) => {
+
+    let [key, value] = item.split("=");
+    result = {
+        ...result,
+        [key]: value
+    }
+   });
+
+   let {payerName, payerMobile, payerEmail, transDate, clientTxnId, bankName, statusCode, status, paidAmount, paymentMode, sabpaisaTxnId, sabpaisaMessage,  bankErrorCode } = result;
+
+
+  const existingTransaction =  await Transaction.findOne({clientTxnId});
+
+  if(!existingTransaction) {
+    return res.status(404).json({message: "Transaction not found in the database"})
+  }
+
+
+  await Transaction.updateOne({
+    clientTxnId,
+  }, {
+   
+      bankName,
+      statusCode,
+      status,
+      paidAmount,
+     paymentMode,
+     sabpaisaMessage,
+     sabpaisaTxnId,
+     bankErrorCode
+  });
+
+
+  console.log(result);
+
+  const existingBooking = await Booking.findOne({"roomBooker.name": payerName, "roomBooker.email" : payerEmail, "roomBooker.phone" : payerMobile });
+  existingBooking.status = `PAYMENT ${status}`;
+
+  await existingBooking.save();
+
       res.render(process.cwd() + "/pg-form-response.html", {
-        decryptedResponse: decryptedResponse,
+        transactionId: clientTxnId,
+        status,
+        transDate
       });
-    });
+
+      
+
   
   });
   
