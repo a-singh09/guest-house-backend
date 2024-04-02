@@ -96,10 +96,11 @@ app.post("/getPgRes", async (req, res) => {
     }
    });
 
-   let {payerName, payerMobile, payerEmail, transDate, clientTxnId, bankName, statusCode, status, paidAmount, paymentMode, sabpaisaTxnId, sabpaisaMessage,  bankErrorCode } = result;
+   let { transDate, clientTxnId, bankName, statusCode, status, paidAmount, paymentMode, sabpaisaTxnId, sabpaisaMessage,  bankErrorCode } = result;
 
 
   const existingTransaction =  await Transaction.findOne({clientTxnId});
+  const bookingId = existingTransaction.bookingId;
 
   if(!existingTransaction) {
     return res.status(404).json({message: "Transaction not found in the database"})
@@ -123,7 +124,8 @@ app.post("/getPgRes", async (req, res) => {
 
   console.log(result);
 
-  const existingBooking = await Booking.findOne({"roomBooker.name": payerName, "roomBooker.email" : payerEmail, "roomBooker.phone" : payerMobile });
+  const existingBooking = await Booking.findById(bookingId);
+  console.log(existingBooking);
   existingBooking.status = `PAYMENT ${status}`;
 
   await existingBooking.save();
