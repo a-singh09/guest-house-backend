@@ -32,7 +32,7 @@ router.get("/makepayment", async (req, res) => {
     let clientCode = CLIENT_CODE;   
     let transUserName = USER_NAME;
     let transUserPassword = USER_PASS;
-    const callbackUrl = "http://127.0.0.1:3000/getPgRes";
+    const callbackUrl = `${REMOTE_URL}/getPgRes`;
     const channelId = CHANNEL_ID;
     const spURL = STAGING_GATEWAY_URL;
    
