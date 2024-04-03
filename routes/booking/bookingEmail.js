@@ -253,8 +253,8 @@ router.post("/hod", async (req, res) => {
     }
 
     const { name, studRoll } = existingUser;
-     startDate = formatDate(new Date(startDate));
-     endDate = formatDate(new Date(endDate));
+     let StartDate = formatDate(new Date(startDate));
+     let EndDate = formatDate(new Date(endDate));
 
     const mailOptions = {
       from: {
@@ -269,8 +269,8 @@ router.post("/hod", async (req, res) => {
         bookingId,
         name,
         studRoll,
-        startDate,
-        endDate
+        StartDate,
+        EndDate
       }),
     };
 
