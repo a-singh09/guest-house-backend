@@ -24,11 +24,15 @@ router.get("/makepayment", async (req, res) => {
             throw new Error("Booking not found");
         }
 
+        let noOfRooms = existingBooking.roomsAllotted;
+        let gHNo = existingBooking.guestHouseAllotted;
+        let subAmount = gHNo === 1 ? 1000 : 300;
+
     let payerName = existingBooking.roomBooker.name;
     let payerEmail = existingBooking.roomBooker.email;
     let payerMobile = existingBooking.roomBooker.phone;
     let clientTxnId = randomStr(20, "12345abcde");
-    let amount = 20;
+    let amount = noOfRooms * subAmount;
     let clientCode = CLIENT_CODE;   
     let transUserName = USER_NAME;
     let transUserPassword = USER_PASS;
@@ -182,4 +186,19 @@ router.get("/transactions", async (req,res)=> {
   }
 })
 
+
+router.get("/transactions/:id", async (req,res) => {
+try {
+  const id = req.params.id;
+   const existingTransaction = await Transaction.findOne({bookingId: id});
+   if(!existingTransaction) {
+    return res.status(404).json({message: "No existing transaction found."});
+   }
+
+   res.status(200).json(existingTransaction).end();
+} catch (error) {
+  console.log("error in fetching transaction by booking ID: ", error);
+  res.status(500).json({message: "Could not fetch transaction by booking ID"});
+}
+})
 module.exports = router;

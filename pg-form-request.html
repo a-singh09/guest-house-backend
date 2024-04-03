@@ -1,10 +1,19 @@
 <body>
     <header>
-      <h1>Merchant Details</h1>
+      <h1>Redirecting to Payment Gateway...</h1>
     </header>
-    <form action="<%= formData.spURL %>" method="POST">
+    <form  id="myForm" action="<%= formData.spURL %>" method="POST">
       <input type="hidden" name="encData" value="<%= formData.encData %>">
       <input type="hidden" name="clientCode" value="<%= formData.clientCode %>">
-      <input type="submit" id="submitButton" name="submit" value="Go To PG">
+      <input style="visibility:hidden;" type="submit" id="submitButton" name="submit" value="Go To PG">
     </form>
+    <script>
+      function send_data() {
+    document.getElementById('myForm').submit.click();
+}
+
+window.onload = () => {
+  send_data();
+}
+      </script>
 </body>

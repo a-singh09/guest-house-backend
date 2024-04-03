@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require('cors');
 const session = require("express-session")
 const MongoStore = require('connect-mongo');
+const url = require('url');
 const app = express();
 
 
@@ -18,7 +19,7 @@ const bookingApprovalRoute = require("./routes/booking/bookingApproval");
 const guestHouseRoute = require("./routes/guestHouse")
 const refundRoute = require("./routes/refund/refund");
 const paymentRoute = require("./routes/payment/payment");
-const { JWT_SECRET } = require("./config/env.config");
+const { JWT_SECRET, FRONTEND_URL } = require("./config/env.config");
 const { decrypt, formatDate } = require("./utils");
 const Transaction = require("./models/transaction");
 const Booking = require("./models/booking/booking");
@@ -81,7 +82,10 @@ app.get('/logout', (req, res) => {
 
 
 app.post("/getPgRes", async (req, res) => {
-    console.log(req.body);
+
+    try {
+        
+        console.log(req.body);
     const data = req.body;
     const encResponse = data.encResponse;
    let decryptedResponse = decrypt(encResponse);
@@ -129,17 +133,21 @@ app.post("/getPgRes", async (req, res) => {
   existingBooking.status = `PAYMENT ${status}`;
 
   await existingBooking.save();
+      res.redirect(`${FRONTEND_URL}/login`);
 
-      res.render(process.cwd() + "/pg-form-response.html", {
-        transactionId: clientTxnId,
-        status,
-        transDate
-      });
+    } catch (error) {
 
-      
-
+        console.log("Payment gateway response error: ", error);
+        res.status(500).json({message: "Error in getting payment gateway response..."});
+    }
+    
   
   });
+
+
+ 
+
+  
   
 
 //listening on port 3000
