@@ -26,7 +26,7 @@ router.get("/makepayment", async (req, res) => {
 
         let noOfRooms = existingBooking.roomsAllotted;
         let gHNo = existingBooking.guestHouseAllotted;
-        let subAmount = gHNo === 1 ? 1000 : 300;
+        let subAmount = gHNo === 1 ? 1000 : 600;
 
     let payerName = existingBooking.roomBooker.name;
     let payerEmail = existingBooking.roomBooker.email;
