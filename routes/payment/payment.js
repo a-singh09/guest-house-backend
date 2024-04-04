@@ -24,7 +24,7 @@ router.get("/makepayment", async (req, res) => {
             throw new Error("Booking not found");
         }
 
-        let noOfRooms = existingBooking.roomsAllotted;
+        let noOfRooms = existingBooking.roomsAllotted.length;
         let gHNo = existingBooking.guestHouseAllotted;
         let subAmount = gHNo === 1 ? 1000 : 600;
 
