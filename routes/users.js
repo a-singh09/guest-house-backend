@@ -148,7 +148,7 @@ router.get("/:id/bookingHistory/:type", async (req,res) => {
 
     if(type === 'upcoming') {
         const currentDate = new Date();
-        const upcomingBookings = await Booking.find({"roomBooker.email": email, startDate: {$gte: currentDate } });
+        const upcomingBookings = await Booking.find({"roomBooker.email": email, status: { $not: { $in: ['rejected', 'autoReject'] }}, startDate: {$gte: currentDate } });
 
        return res.json(upcomingBookings);
     }
