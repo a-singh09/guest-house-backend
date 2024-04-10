@@ -130,7 +130,9 @@ app.post("/getPgRes", async (req, res) => {
 
   const existingBooking = await Booking.findById(bookingId);
   console.log(existingBooking);
-  existingBooking.status = `PAYMENT ${status}`;
+  if(status !== "FAILED") {
+      existingBooking.status = `PAYMENT ${status}`;
+  }
 
   await existingBooking.save();
       res.redirect(`${FRONTEND_URL}/login`);
