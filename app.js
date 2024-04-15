@@ -90,6 +90,8 @@ app.post("/getPgRes", async (req, res) => {
     const encResponse = data.encResponse;
    let decryptedResponse = decrypt(encResponse);
 
+   console.log(decryptedResponse)
+
    let result = {};
    decryptedResponse.split("&").forEach((item) => {
 
@@ -104,7 +106,6 @@ app.post("/getPgRes", async (req, res) => {
 
 
   const existingTransaction =  await Transaction.findOne({clientTxnId});
-  const bookingId = existingTransaction.bookingId;
 
   if(!existingTransaction) {
     return res.status(404).json({message: "Transaction not found in the database"})
@@ -128,17 +129,13 @@ app.post("/getPgRes", async (req, res) => {
 
   console.log(result);
 
-  const existingBooking = await Booking.findById(bookingId);
+  const existingBooking = await Booking.findOne({clientTxnId});
   console.log(existingBooking);
-  if(status !== "FAILED") {
-      existingBooking.status = `PAYMENT ${status}`;
-  }
-
+      existingBooking.paymentStatus = `${status}`;
   await existingBooking.save();
       res.redirect(`${FRONTEND_URL}/login`);
 
     } catch (error) {
-
         console.log("Payment gateway response error: ", error);
         res.status(500).json({message: "Error in getting payment gateway response..."});
     }

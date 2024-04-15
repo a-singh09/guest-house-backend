@@ -31,7 +31,7 @@ router.get("/makepayment", async (req, res) => {
     let payerName = existingBooking.roomBooker.name;
     let payerEmail = existingBooking.roomBooker.email;
     let payerMobile = existingBooking.roomBooker.phone;
-    let clientTxnId = randomStr(20, "12345abcde");
+    let clientTxnId = randomStr(15, "12345abcde");
     let amount = noOfRooms * subAmount;
     let clientCode = CLIENT_CODE;   
     let transUserName = USER_NAME;
@@ -63,6 +63,8 @@ router.get("/makepayment", async (req, res) => {
       transUserPassword +
       "&callbackUrl=" +
       callbackUrl +
+      "&udf20=" + 
+      clientTxnId + 
       "&channelId=" +
       channelId +
       "&mcc=" +
@@ -81,30 +83,28 @@ router.get("/makepayment", async (req, res) => {
       clientCode: clientCode,
     };
 
-    await Transaction.create({
-      payerEmail,
-      payerName,
-      payerMobile,
-      clientTxnId,
-      amount,
-      channelId,
-      mcc,
-      transDate,
-      bookingId: data.booking_id
-    });
+    existingBooking.clientTxnId = clientTxnId;
 
-    // client Txn ID
+    await Promise.all([
+      Transaction.create({
+        payerEmail,
+        payerName,
+        payerMobile,
+        clientTxnId,
+        amount,
+        channelId,
+        mcc,
+        transDate,
+        bookingId: data.booking_id
+      }),
+
+      existingBooking.save()
+    ]);
+    
 
 
     res.render(process.cwd() + "/pg-form-request.html", { formData: formData });
-    // await axios.post(spURL, {
-    //   encData: formData.encData,
-    //   clientCode: formData.clientCode
-    // }, {
-    //   headers: {
-    //     "Content-Type" : "application/json"
-    //   }
-    // });
+  
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: err.message });
@@ -116,9 +116,12 @@ router.get("/makepayment", async (req, res) => {
 
   router.get("/status", async (req,res)=> {
 //d1dd5c1ac2ea3a1b5a3a
-const {clientTxnId} = req.query;
+
+try {
+
+  const {clientTxnId} = req.query;  
 if(!clientTxnId) {
-  return res.status(400).message({message: "client Txn id or message not found"});
+  return res.status(400).json({message: "client Txn id or message not found"});
 }
 const statusTransEncData = encrypt(`clientCode=${CLIENT_CODE}&clientTxnId=${clientTxnId}`);
 
@@ -159,6 +162,11 @@ let result = {};
 
 console.log(result);
 res.json(data).end();
+
+  
+} catch (error) {
+  res.status(500).json({message : "Could not get transaction status..."})
+}
 
 
   });

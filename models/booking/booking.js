@@ -70,7 +70,16 @@ const bookingSchema = new mongoose.Schema({
         // enum: ['approved', 'pending','hodPending', 'cancelled', 'rejected', 'checkedOut', 'refunded', 'paid', 'autoReject'],
         // default: 'pending'
     },
-   
+
+    paymentStatus: {
+        type: String,
+        default: "UNPAID"
+    },
+
+    clientTxnId: {
+      type: String
+    },
+
     bookingFor: {
          type: String,
     },
@@ -129,7 +138,8 @@ const bookingSchema = new mongoose.Schema({
         address: {
             type: String,
             //  required: true,
-        }
+        },
+        
     }
 }, { timestamps: true });
 
