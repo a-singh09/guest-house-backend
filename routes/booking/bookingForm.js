@@ -27,7 +27,7 @@ router.post("/", async (req, res) => {
 
     const actualData = {
       purpose: data.purpose,
-      name: `${data.firstName} ${data.lastName}`,
+      name: `${data.firstName} ${data.lastName ?? ""}`,
       designation: data.designation,
       address: data.address,
       phone: data.phNumber,

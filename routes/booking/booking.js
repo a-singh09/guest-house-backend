@@ -27,17 +27,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
-  try {
-    const bookings = await Booking.find({});
-
-    res.status(200).json(bookings);
-  }
-  catch (err) {
-    console.log(err.message);
-    res.status(500).json({ message: err.message })
-  }
-});
 
 router.get("/admin/:id", async (req,res) => {
 
@@ -162,12 +151,7 @@ router.patch("/:id", async (req,res) => {
     console.log("/booking/:id PATCH Error: ", error.message);
     return res.status(500).json({message: "Failed to update status"});
   }
-})
-
-
-
-
-
+});
 
 
 // DELETE FOR (BOOKING CANCELLATION): delete the booking and remove from booking history

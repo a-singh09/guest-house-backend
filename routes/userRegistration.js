@@ -141,7 +141,7 @@ if (!url) {
 
 
         
-        const refName = `${data.RefFirstName} ${data.RefLastName}`;
+        const refName = `${data.RefFirstName} ${data.RefLastName ?? ""}`;
         let finalRef = null;
         
         if(Number(data.registerOption) === 3)  {   
@@ -223,7 +223,7 @@ if (!url) {
          
         
         const commonUserData = {
-            name: `${data.Firstname} ${data.Lastname}`,
+            name: `${data.Firstname} ${data.Lastname ?? ""}`,
             phone: data.Phnnumber,
             email: data.Email.toLowerCase(),
             password: hashedPassword,
