@@ -7,7 +7,7 @@ const Booking = require("../../models/booking/booking");
 const { default: axios } = require("axios");
 const User = require("../../models/user/user");
 const { formatDate, hodDeptToEmailMap } = require("../../utils");
-const { ADMIN_EMAIL, REMOTE_URL } = require("../../config/env.config");
+const { ADMIN_EMAIL, REMOTE_URL, EMAIL_USER, EMAIL_PASS } = require("../../config/env.config");
 
 
 const transportOptions = {
@@ -15,8 +15,8 @@ const transportOptions = {
   port: 465,
   secure: true,
   auth: {
-    user: "mrimann96@gmail.com",
-    pass: "lwidtbnghfrtcgcv",
+    user: `${EMAIL_USER}`,
+    pass: `${EMAIL_PASS}`,
   },
 };
 

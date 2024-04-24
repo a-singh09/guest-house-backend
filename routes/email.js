@@ -8,7 +8,7 @@ const bookingEmailRoute = require('./booking/bookingEmail');
 const Login = require("../models/login");
 const PendingUser = require("../models/pendingUsers");
 const RegisteredUser = require("../models/registeredUsers");
-const { REMOTE_URL, ADMIN_EMAIL } = require('../config/env.config');
+const { REMOTE_URL, ADMIN_EMAIL, EMAIL_PASS, EMAIL_USER } = require('../config/env.config');
 
 const router = express.Router();
 
@@ -21,8 +21,8 @@ const transportOptions = {
     port: 465,
     secure: true,
     auth: {
-        user: "mrimann96@gmail.com",
-        pass: "lwidtbnghfrtcgcv",
+        user: `${EMAIL_USER}`,
+        pass: `${EMAIL_PASS}`,
     }
 }
 
