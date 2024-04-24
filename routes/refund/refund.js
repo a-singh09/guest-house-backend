@@ -113,7 +113,7 @@ router.get("/:clientTxnId",  async (req,res) => {
 })
 router.get("/", async (req, res) => {
     try {
-        const refunds = await Refund.find({}).populate("booking");
+        const refunds = await Refund.find({});
         res.json(refunds);
     } catch (err) {
         res.json({ message: err.message });
