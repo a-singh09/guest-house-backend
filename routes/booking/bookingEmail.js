@@ -6,7 +6,7 @@ const nodemailer = require("nodemailer");
 const Booking = require("../../models/booking/booking");
 const { default: axios } = require("axios");
 const User = require("../../models/user/user");
-const { formatDate } = require("../../utils");
+const { formatDate, hodDeptToEmailMap } = require("../../utils");
 const { ADMIN_EMAIL, REMOTE_URL } = require("../../config/env.config");
 
 
@@ -230,6 +230,12 @@ NITJ Guest House
 </p>
 `;
 
+
+
+
+
+
+
 router.post("/hod", async (req, res) => {
   //   console.log(req.body);
   const { bookingId } = req.body;
@@ -256,12 +262,14 @@ router.post("/hod", async (req, res) => {
      let StartDate = formatDate(new Date(startDate));
      let EndDate = formatDate(new Date(endDate));
 
+
+     const hodEmail = hodDeptToEmailMap.get(dept) ?? `${ADMIN_EMAIL}`;
     const mailOptions = {
       from: {
         name: "donotreply",
         address: "mrimann96@gmail.com",
       },
-      to: `${ADMIN_EMAIL}`,
+      to: hodEmail,
       subject: "Request for Approval: Guest House Room Allottment",
       html: hodBookingRequestTemplate({
         dept,

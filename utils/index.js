@@ -56,11 +56,31 @@ function randomStr(len, arr) {
     return ans;
   }
   
+  const hodDeptToEmailMap = new Map();
+  hodDeptToEmailMap.set('BioTechnology', "obt@nitj.ac.in")
+  hodDeptToEmailMap.set('Chemical Engineering', "och@nitj.ac.in");
+  hodDeptToEmailMap.set('Chemistry',"ocy@nitj.ac.in");
+  hodDeptToEmailMap.set('Civil Engineering',"oce@nitj.ac.in");
+  hodDeptToEmailMap.set('Computer Science and Engineering',"ocs@nitj.ac.in")
+  hodDeptToEmailMap.set('Electrical Engineering',"oee@nitj.ac.in")
+  hodDeptToEmailMap.set('Electronics and Communication Engineering',"	oec@nitj.ac.in")
+  hodDeptToEmailMap.set('Humanities and Management',"ohm@nitj.ac.in")
+  hodDeptToEmailMap.set('Industrial and Production Engineering',"oie@nitj.ac.in")
+  hodDeptToEmailMap.set('Information Technology',"oit@nitj.ac.in")
+  hodDeptToEmailMap.set('Instrumentation and Control Engineering',"oic@nitj.ac.in")
+  hodDeptToEmailMap.set('Mathematics',"oma@nitj.ac.in")
+  hodDeptToEmailMap.set('Mechanical Engineering',"ome@nitj.ac.in")
+  hodDeptToEmailMap.set('Physics',"oph@nitj.ac.in")
+  hodDeptToEmailMap.set('Textile Engineering',"otx@nitj.ac.in")
+
 
 
 module.exports = {
     formatDate,
     encrypt,
     decrypt,
-    randomStr
+    randomStr,
+     hodDeptToEmailMap
 }
+
+
