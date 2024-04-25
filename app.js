@@ -102,7 +102,7 @@ app.post("/getPgRes", async (req, res) => {
     }
    });
 
-   let { transDate, clientTxnId, bankName, statusCode, status, paidAmount, paymentMode, sabpaisaTxnId, sabpaisaMessage,  bankErrorCode } = result;
+   let { clientTxnId, bankName, statusCode, status, paidAmount, paymentMode, sabpaisaTxnId, sabpaisaMessage,  bankErrorCode } = result;
 
 
   const existingTransaction =  await Transaction.findOne({clientTxnId});
@@ -124,6 +124,7 @@ app.post("/getPgRes", async (req, res) => {
      sabpaisaMessage,
      sabpaisaTxnId,
      bankErrorCode
+     
   });
 
 

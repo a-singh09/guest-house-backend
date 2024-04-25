@@ -162,7 +162,8 @@ router.post("/:id", async (req, res) => {
 
     // booking cancelled
     const y = await Booking.findByIdAndUpdate(id, {
-      status: 'cancelled'
+      status: 'cancelled',
+      paymentStatus: "CANCELLED"
     }, {
       new: true
     });
@@ -215,7 +216,7 @@ router.post("/:id", async (req, res) => {
   }
 
   catch (err) {
-    console.log({ message: err.message });
+    console.log({ message: err.message });  
     res.status(500).json({ message: err.message })
   }
 });
