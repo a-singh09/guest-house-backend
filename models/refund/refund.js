@@ -10,8 +10,12 @@ const refundSchema = new mongoose.Schema({
   clientCode: String,
   clientId: String,
   message: String,
-  responseCode: String
-
+  responseCode: String,
+  booking: mongoose.Schema.ObjectId,
+  name: String,
+  bankName: String,
+  accountNumber: String,
+  IFSC: String
 }, { timestamps: true });
 
 const Refund = new mongoose.model("Refund", refundSchema);

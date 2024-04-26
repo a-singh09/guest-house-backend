@@ -33,7 +33,7 @@ console.log("Data: ", data);
         // update booking status
         const bookingDetails = await Booking.findByIdAndUpdate(
             data.booking,
-            { status: "refunded" }
+            { status: "refundInitiated" }
         );
 
         res.status(200).json({

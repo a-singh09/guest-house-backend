@@ -76,16 +76,15 @@ router.put("/room/allot", async (req,res) => {
           const rooms = data.roomsAllotted;
 
 
+          const incObject = {}; 
         for(let i = 0;i<=rooms.length;i++) {
-            // rooms ka index true kr diya 
-            const incObject = {};
             incObject[`rooms.${rooms[i]-1}`] = true;
-             await guestHouse.updateOne({
-                   guestHouseId: guestHouseId
-             }, {
-              $set:  incObject
-             });
         }
+        await guestHouse.updateOne({
+            guestHouseId: guestHouseId
+      }, {
+       $set:  incObject
+      });
 
     }
     catch(err) {
