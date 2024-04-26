@@ -178,17 +178,18 @@ router.post("/:id", async (req, res) => {
 
     if (y.roomsAllotted.length > 0) {
       const rooms = y.roomsAllotted;
-      const guestHouses = y.guestHouseAllotted;
+      const gHNumber = y.guestHouseAllotted;
 
+      const incObject = {};
       for (let i = 0; i < rooms.length; i++) {
-        const incObject = {};
-        incObject[`rooms.${rooms[i] - 1}`] = false;
-        await guestHouse.updateOne({
-          guestHouseId: guestHouses
-        }, {
-          $set: incObject
-        });
+        incObject[`rooms.${rooms[i] - 1}`] = false;  
       }
+
+      await guestHouse.updateOne({
+        guestHouseId: gHNumber
+      }, {
+        $set: incObject
+      });
     }
 
 
