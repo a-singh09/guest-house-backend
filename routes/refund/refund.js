@@ -36,8 +36,11 @@ console.log("Data: ", data);
             { status: "refundInitiated" }
         );
 
+
+
         res.status(200).json({
-            message: `Refund ${refundDetails._id} created successfully...`,
+           ...actualData,
+           booking: bookingDetails
         });
     } catch (err) {
         console.log(err.message);
@@ -60,9 +63,6 @@ try {
     if(!existingTransaction) {
         return res.status(404).json({message: "Transaction not found"})
     }
-
-
-
 
     const {amount,  sabpaisaTxnId } = existingTransaction;
 const stringforRequest = `clientCode=${CLIENT_CODE}&amount=${amount}&spTxnId=${sabpaisaTxnId}&clientTxnId=${clientTxnId}&message=${message}`;
