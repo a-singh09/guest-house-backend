@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const Room = require("../room")
+const Room = require("../room");
+const { formatDate } = require("../../utils");
 
 const refundSchema = new mongoose.Schema({
   refundId: String,
@@ -15,8 +16,24 @@ const refundSchema = new mongoose.Schema({
   name: String,
   bankName: String,
   accountNumber: String,
-  IFSC: String
+  IFSC: String,
+  refundType: {
+    type: String,
+    default: 'manual',
+    enum: ['automated', 'manual']
+  },
+  guestHouse: Number,
+  arrivalDate: Date,
+  cancellationDate: Date,
+   noOfDays: Number,
+   amountDeducted: Number,
+   amountReturned :  Number
+  
 }, { timestamps: true });
+
+
+
+
 
 const Refund = new mongoose.model("Refund", refundSchema);
 module.exports = Refund;

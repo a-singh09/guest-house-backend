@@ -6,9 +6,15 @@ const Booking = require("../../models/booking/booking");
 const Refund = require("../../models/refund/refund");
 const Transaction = require("../../models/transaction");
 const { CLIENT_CODE, STAGING_REFUND_URL } = require("../../config/env.config");
-const { encrypt } = require("../../utils");
+const { encrypt, formatDate } = require("../../utils");
 const axios = require("axios");
 
+function calcNoOfDays(latter, earlier) {
+    const latterTime = latter.getTime();
+    const earlierTime = earlier.getTime();
+return (latterTime - earlierTime) / (1000 * 60 * 60 * 24);
+
+}
 router.post("/", async (req, res) => {
     const data = req.body;
 console.log("Data: ", data);
@@ -23,12 +29,11 @@ console.log("Data: ", data);
 
 
 
-    const newRefund = new Refund(actualData);
-
+  
     try {
         // save new refund
-        const refundDetails = await newRefund.save();
-        console.log(refundDetails);
+        // const refundDetails = await newRefund.save();
+        // console.log(refundDetails);
 
         // update booking status
         const bookingDetails = await Booking.findByIdAndUpdate(
@@ -37,11 +42,56 @@ console.log("Data: ", data);
         );
 
 
+        const { guestHouseAllotted, startDate, endDate, roomsAllotted } = bookingDetails;
+
+
+        const currentDate = new Date();
+    
+        const arrivalDate = new Date(startDate);
+        const departureDate = new Date(endDate);
+        const noOfRooms = roomsAllotted.length;
+        const subAmount = guestHouseAllotted === 1 ? 1000 : 600;
+        const amount = subAmount * noOfRooms;
+        let amountDeducted = 0;
+        const arrivalDaysLeft = calcNoOfDays(arrivalDate - currentDate);
+
+        if(arrivalDaysLeft >= 3 && arrivalDaysLeft <= 7)  {
+            amountDeducted = 0.25 * amount;
+        }
+        else if (arrivalDaysLeft >= 1 && arrivalDaysLeft < 3) {
+            amountDeducted = 0.5 * amount;
+        }
+        else if(arrivalDaysLeft >=0 && arrivalDaysLeft<1) {
+            amountDeducted = amount;
+        }
+        
+                
+
+        const newRefund = new Refund({
+            ...actualData,
+            guestHouse: guestHouseAllotted,
+            arrivalDate: (arrivalDate),
+            cancellationDate: (currentDate),
+             noOfDays: calcNoOfDays(departureDate, arrivalDate),
+             amountDeducted,
+             amountReturned :  (amount - amountDeducted)  
+         });
+
+         await newRefund.save();
+         
+         console.log(newRefund);
 
         res.status(200).json({
-           ...actualData,
-           booking: bookingDetails
-        });
+            ...actualData,
+            guestHouse: guestHouseAllotted,
+            arrivalDate: formatDate(arrivalDate),
+            cancellationDate: formatDate(currentDate),
+             noOfDays: calcNoOfDays(departureDate, arrivalDate),
+             amountDeducted,
+             amountReturned :  (amount - amountDeducted)  
+         });
+
+
     } catch (err) {
         console.log(err.message);
         res.status(500).json({ message: err.message });
@@ -74,7 +124,7 @@ const response = await axios.get(`${STAGING_REFUND_URL}?clientCode=${CLIENT_CODE
 
 const data = response.data;
 
-await Refund.create({...data });
+await Refund.create({...data, refundType: "automatic" });
 console.log(data);
 
 res.status(201).json(data)
