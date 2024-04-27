@@ -53,7 +53,7 @@ console.log("Data: ", data);
         const subAmount = guestHouseAllotted === 1 ? 1000 : 600;
         const amount = subAmount * noOfRooms;
         let amountDeducted = 0;
-        const arrivalDaysLeft = calcNoOfDays(arrivalDate - currentDate);
+        const arrivalDaysLeft = calcNoOfDays(arrivalDate,currentDate);  
 
         if(arrivalDaysLeft >= 3 && arrivalDaysLeft <= 7)  {
             amountDeducted = 0.25 * amount;
