@@ -263,13 +263,13 @@ router.post("/hod", async (req, res) => {
      let EndDate = formatDate(new Date(endDate));
 
 
-     const hodEmail = hodDeptToEmailMap.get(dept) ?? `${ADMIN_EMAIL}`;
+    //  const hodEmail = hodDeptToEmailMap.get(dept) ?? `${ADMIN_EMAIL}`;
     const mailOptions = {
       from: {
         name: "donotreply",
         address: "mrimann96@gmail.com",
       },
-      to: hodEmail,
+      to: `${ADMIN_EMAIL}`,
       subject: "Request for Approval: Guest House Room Allottment",
       html: hodBookingRequestTemplate({
         dept,
