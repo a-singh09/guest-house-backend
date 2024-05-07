@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const express = require("express");
 const User = require('../models/user/user');
 const Student = require('../models/user/student');
-
 const Ref = require('../models/user/ref');
 const Faculty = require('../models/user/faculty');
 const Alumni = require('../models/user/alumni');

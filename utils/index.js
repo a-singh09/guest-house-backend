@@ -79,16 +79,15 @@ function randomStr(len, arr) {
           "Workshop",
           "Short Term Course",
           "Conference",
-          "Personal"
+          "Personal",
+          "Others"
   ]
 
   const isPersonalVisit = (reason) => {
    return reason === "Personal";
   }
 
-  const hasSomeOtherReasonForVisit = (reason) => {
-return reason === 'Others';
-  }
+ 
 
 module.exports = {
     formatDate,
@@ -97,8 +96,7 @@ module.exports = {
     randomStr,
      hodDeptToEmailMap,
      PURPOSE_OF_VISIT_OPTIONS,
-     isPersonalVisit,
-     hasSomeOtherReasonForVisit
+     isPersonalVisit
 }
 
 

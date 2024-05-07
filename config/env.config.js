@@ -5,7 +5,6 @@ if(process.env.NODE_ENV === 'development') {
 }
 
 
-
 const  {
  JWT_SECRET,
  REMOTE_URL,
@@ -21,7 +20,8 @@ const  {
  STAGING_TRANS_ENQUIRY_URL,
  STAGING_REFUND_URL,
  EMAIL_PASS,
- EMAIL_USER
+ EMAIL_USER,
+ MONGODB_URL
  } = process.env;
 
  module.exports = {
@@ -39,5 +39,6 @@ const  {
     STAGING_TRANS_ENQUIRY_URL,
     STAGING_REFUND_URL,
     EMAIL_PASS,
-    EMAIL_USER
+    EMAIL_USER,
+    MONGODB_URL
  }

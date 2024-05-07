@@ -19,21 +19,20 @@ const bookingApprovalRoute = require("./routes/booking/bookingApproval");
 const guestHouseRoute = require("./routes/guestHouse")
 const refundRoute = require("./routes/refund/refund");
 const paymentRoute = require("./routes/payment/payment");
-const { JWT_SECRET, FRONTEND_URL } = require("./config/env.config");
+const { JWT_SECRET, FRONTEND_URL, MONGODB_URL } = require("./config/env.config");
 const { decrypt, formatDate } = require("./utils");
 const Transaction = require("./models/transaction");
 const Booking = require("./models/booking/booking");
 
 
 app.enable('trust proxy');
-// const origins = ['http://localhost:5173',"https://guest-house-system-eight.vercel.app/"];
+const possibleOrigins = ['http://localhost:5173',`${FRONTEND_URL}`];
 app.set("view engine", "html");
 app.engine("html", require("ejs").renderFile);
 app.use(express.static(__dirname));
 
 app.use(cors({
-    origin: ["http://localhost:5173", "https://guest-house-frontend.onrender.com"],
-    // default: "http://localhost:5173",
+    origin: possibleOrigins,
     credentials: true,
 }));
 //body parsing
@@ -45,7 +44,7 @@ app.use(session({
     secret: JWT_SECRET,
     resave: true,
     saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: "mongodb+srv://user:user@cluster0.uunf6ts.mongodb.net/guestHouse?retryWrites=true&w=majority" }),
+    store: MongoStore.create({ mongoUrl: `${MONGODB_URL}`}),
     cookie: {
         secure: true,
         httpOnly: false,
@@ -80,7 +79,7 @@ app.get('/logout', (req, res) => {
     });
 });
 
-
+// payment gateway response
 app.post("/getPgRes", async (req, res) => {
 
     try {
@@ -163,9 +162,7 @@ app.use("/admin/bookingApproval", bookingApprovalRoute);
 app.use("/guestHouse", guestHouseRoute);
 app.use("/refund", refundRoute);
 app.use("/payments", paymentRoute);
-
 // app.use("/check-session", sessionRoute);
-
 app.use("/images", require("./routes/images"));
 app.use("/calendar", require("./routes/calendar"));
 
