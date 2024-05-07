@@ -110,6 +110,11 @@ const bookingSchema = new mongoose.Schema({
         isStudent : {
            type: Boolean
         },
+
+        isFaculty: {
+           type: Boolean,
+           default: false
+        },
         idProof: {
             type: String
         },

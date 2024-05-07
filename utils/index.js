@@ -74,13 +74,31 @@ function randomStr(len, arr) {
   hodDeptToEmailMap.set('Textile Engineering',"otx@nitj.ac.in")
 
 
+  const PURPOSE_OF_VISIT_OPTIONS = [
+           "Official Work",
+          "Workshop",
+          "Short Term Course",
+          "Conference",
+          "Personal"
+  ]
+
+  const isPersonalVisit = (reason) => {
+   return reason === "Personal";
+  }
+
+  const hasSomeOtherReasonForVisit = (reason) => {
+return reason === 'Others';
+  }
 
 module.exports = {
     formatDate,
     encrypt,
     decrypt,
     randomStr,
-     hodDeptToEmailMap
+     hodDeptToEmailMap,
+     PURPOSE_OF_VISIT_OPTIONS,
+     isPersonalVisit,
+     hasSomeOtherReasonForVisit
 }
 
 

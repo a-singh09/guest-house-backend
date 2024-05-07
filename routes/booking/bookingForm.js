@@ -26,7 +26,7 @@ router.post("/", async (req, res) => {
    
 
     const actualData = {
-      purpose: data.purpose,
+      purpose: data.purpose === "Others" && JSON.parse(data.isFaculty) ? data.otherReason : data.purpose,
       name: `${data.firstName} ${data.lastName ?? ""}`,
       designation: data.designation,
       address: data.address,
@@ -43,6 +43,7 @@ router.post("/", async (req, res) => {
             isAdmin: false,
             name: data.PersonName,
             isStudent: data.isStudent,  
+            isFaculty: data.isFaculty, 
             dept: data.PersonDept,
             idProof: data.PersonID, 
             phone: data.PersonPhone,

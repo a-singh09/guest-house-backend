@@ -5,7 +5,7 @@ const axios = require('axios')
 
 const Booking = require("../../models/booking/booking");
 const { CLIENT_CODE, USER_NAME, USER_PASS, CHANNEL_ID, STAGING_GATEWAY_URL, REMOTE_URL, STAGING_TRANS_ENQUIRY_URL } = require("../../config/env.config");
-const { randomStr, encrypt, decrypt } = require("../../utils");
+const { randomStr, encrypt, decrypt, isPersonalVisit } = require("../../utils");
 const Transaction = require("../../models/transaction");
 
 
@@ -26,7 +26,12 @@ router.get("/makepayment", async (req, res) => {
 
         let noOfRooms = existingBooking.roomsAllotted.length;
         let gHNo = existingBooking.guestHouseAllotted;
-        let subAmount = gHNo === 1 ? 1000 : 600;
+        let isFaculty = existingBooking.roomBooker.isFaculty;
+        const purpose = existingBooking.purpose;
+
+        const guestHouse1SubAmount = isFaculty && !isPersonalVisit(purpose) ? 800 : 1000;
+
+        let subAmount = gHNo === 1 ?  guestHouse1SubAmount : 600;
 
     let payerName = existingBooking.roomBooker.name;
     let payerEmail = existingBooking.roomBooker.email;
