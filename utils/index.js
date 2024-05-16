@@ -57,21 +57,21 @@ function randomStr(len, arr) {
   }
   
   const hodDeptToEmailMap = new Map();
-  hodDeptToEmailMap.set('BioTechnology', "obt@nitj.ac.in")
-  hodDeptToEmailMap.set('Chemical Engineering', "och@nitj.ac.in");
-  hodDeptToEmailMap.set('Chemistry',"ocy@nitj.ac.in");
-  hodDeptToEmailMap.set('Civil Engineering',"oce@nitj.ac.in");
-  hodDeptToEmailMap.set('Computer Science and Engineering',"ocs@nitj.ac.in")
-  hodDeptToEmailMap.set('Electrical Engineering',"oee@nitj.ac.in")
-  hodDeptToEmailMap.set('Electronics and Communication Engineering',"	oec@nitj.ac.in")
-  hodDeptToEmailMap.set('Humanities and Management',"ohm@nitj.ac.in")
-  hodDeptToEmailMap.set('Industrial and Production Engineering',"oie@nitj.ac.in")
-  hodDeptToEmailMap.set('Information Technology',"oit@nitj.ac.in")
-  hodDeptToEmailMap.set('Instrumentation and Control Engineering',"oic@nitj.ac.in")
-  hodDeptToEmailMap.set('Mathematics',"oma@nitj.ac.in")
-  hodDeptToEmailMap.set('Mechanical Engineering',"ome@nitj.ac.in")
-  hodDeptToEmailMap.set('Physics',"oph@nitj.ac.in")
-  hodDeptToEmailMap.set('Textile Engineering',"otx@nitj.ac.in")
+  hodDeptToEmailMap.set('BioTechnology', "hbt@nitj.ac.in")
+  hodDeptToEmailMap.set('Chemical Engineering', "hch@nitj.ac.in");
+  hodDeptToEmailMap.set('Chemistry',"hcy@nitj.ac.in");
+  hodDeptToEmailMap.set('Civil Engineering',"hce@nitj.ac.in");
+  hodDeptToEmailMap.set('Computer Science and Engineering',"hcs@nitj.ac.in")
+  hodDeptToEmailMap.set('Electrical Engineering',"hee@nitj.ac.in")
+  hodDeptToEmailMap.set('Electronics and Communication Engineering',"	hec@nitj.ac.in")
+  hodDeptToEmailMap.set('Humanities and Management',"hhm@nitj.ac.in")
+  hodDeptToEmailMap.set('Industrial and Production Engineering',"hip@nitj.ac.in")
+  hodDeptToEmailMap.set('Information Technology',"hit@nitj.ac.in")
+  hodDeptToEmailMap.set('Instrumentation and Control Engineering',"hic@nitj.ac.in")
+  hodDeptToEmailMap.set('Mathematics',"hma@nitj.ac.in")
+  hodDeptToEmailMap.set('Mechanical Engineering',"hme@nitj.ac.in")
+  hodDeptToEmailMap.set('Physics',"hph@nitj.ac.in")
+  hodDeptToEmailMap.set('Textile Engineering',"hodtextile@nitj.ac.in")
 
 
   const PURPOSE_OF_VISIT_OPTIONS = [
