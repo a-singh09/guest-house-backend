@@ -26,18 +26,6 @@ const { JWT_SECRET, REMOTE_URL } = require("../config/env.config");
 
 
 
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         cb(null, 'uploads');
-//     },
-//     filename: (req, file, cb) => {
-//         const [name, ext] = file.mimetype.split("/");
-//         cb(null, `${name}-${Date.now()}.${ext}`);
-//     }
-// });
-
-
-
 
 initializeApp(firebaseConfig);
 
@@ -146,7 +134,6 @@ if (!url) {
         
         if(Number(data.registerOption) === 3)  {   
     const refType = data.selectedOption;
-
     const refPhone = data.RefPhoneNumber;
             let refTo = refType === "student" ? new Student({
             name: refName,
@@ -283,21 +270,39 @@ if (!url) {
             }
 
             else if(Number(data.registerOption) === 3) {
-                await Promise.all([
-                    axios.get(`${REMOTE_URL}/email/adminNotification/${encodeURIComponent(actualData.name)}/${encodeURIComponent(actualData.email)}/${encodeURIComponent(actualData.phone)}/${encodeURIComponent(actualData.address)}/${encodeURIComponent(actualData.refInfo)}/${encodeURIComponent(refName)}}`),
 
+                const promises = [
                     axios.post(`${REMOTE_URL}/email/sendVerificationEmail`, {
-                        name: actualData.name,
-                        email: actualData.email,
-                        token: token
-                    },
-                        {
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        }),
+                    name: actualData.name,
+                    email: actualData.email,
+                    token: token
+                },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })];
 
-                ]);
+                   if(data.refType !== 'faculty') {
+                    promises.push(axios.get(`${REMOTE_URL}/email/adminNotification/${encodeURIComponent(actualData.name)}/${encodeURIComponent(actualData.email)}/${encodeURIComponent(actualData.phone)}/${encodeURIComponent(actualData.address)}/${encodeURIComponent(actualData.refInfo)}/${encodeURIComponent(refName)}}`))
+                   }
+
+                    if(data.refType === "faculty") {
+                        promises.push(axios.post(`${REMOTE_URL}/email/reference-confirmation`, {
+                            name: actualData.name,
+                            applicantEmail: actualData.email,
+                            referenceEmail: data.FacultyEmail,
+                            refType: "faculty"
+                        },
+                            {
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            }))
+                    }
+
+
+                await Promise.all(promises);
                 return;
             }
 

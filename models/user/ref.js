@@ -19,7 +19,7 @@ const refSchema  = new mongoose.Schema({
         refType : {
             type: String,
             required: false,
-            enum: ['student', 'alumni','other','faculty', ''],
+            enum: ['student', 'alumni','other','faculty'],
         }, 
        
         refFrom : {
