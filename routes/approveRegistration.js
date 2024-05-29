@@ -111,6 +111,8 @@ router.post("/", async (req, res) => {
       const user = new RejectedUser({
         user: newApproval.user
       });
+
+      
       const rejectedUser = await user.save();
       if (rejectedUser === null) {
         throw new Error("rejected user could not be added");

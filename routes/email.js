@@ -413,24 +413,24 @@ const mailOptions = {
     await transporter.sendMail(mailOptions);
     res.json({ message: "User has been notified regarding the registration." });
 
+    let promises = [];
+    
     if(status === 'accepted') {
-        await axios.get(`${REMOTE_URL}/email/adminNotification/${encodeURIComponent(user.name)}/${encodeURIComponent(user.email)}/${encodeURIComponent(user.phone)}/${encodeURIComponent(user.address)}/${encodeURIComponent("faculty")}/${encodeURIComponent("-")}}`);
+         promises.push(axios.get(`${REMOTE_URL}/email/adminNotification/${encodeURIComponent(user.name)}/${encodeURIComponent(user.email)}/${encodeURIComponent(user.phone)}/${encodeURIComponent(user.address)}/${encodeURIComponent("faculty")}/${encodeURIComponent("-")}}`));
+         promises.push(PendingUser.insertOne({ user: user._id }));
+    }
+    else if(status === 'rejected') {
+    promises.push(RejectedUser.insertOne({user: user._id}));
     }
 
-    if(status === 'rejected') {
-        const promises = [
-            // not pending
-            PendingUser.deleteOne({user: user._id}),
-            RejectedUser.insertOne({user: user._id})
-        ]
-        
-        await Promise.all(promises);
-    }
+
+    await Promise.all(promises);
 
 
 }
 catch(err) {
-    res.json({ message: err.message });
+    console.log({faculty_verif_msg: err.message});
+    res.json({ message: "Could not verify email" });
 }
 })
 

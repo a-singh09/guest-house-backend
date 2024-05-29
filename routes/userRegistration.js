@@ -23,6 +23,7 @@ const PendingUser = require('../models/pendingUsers');
 const RegisteredUser = require('../models/registeredUsers');
 const firebaseConfig = require("../config/firebase.config");
 const { JWT_SECRET, REMOTE_URL } = require("../config/env.config");
+const RejectedUser = require("../models/rejectedUsers");
 
 
 
@@ -124,6 +125,12 @@ if (!url) {
                 return res.json({ message: "Email ID Already registered. Try Login with same email. ", status: "accepted" });
             }
 
+
+            const rejectedUsers = await RejectedUser.find({}).populate("user");
+            const filteredRejectedUsers = rejectedUsers.filter((x) => x.user.email === email);
+            if (filteredRejectedUsers != 0) {
+                return res.json({ message: "Email ID have already been Already rejected. Try Login with same email. ", status: "rejected" });
+            }
 
         }
 
@@ -237,21 +244,26 @@ if (!url) {
         }
         else {
 
-            const pendingUser = new PendingUser({ user: newUser._id });
-            const newPendingUser = await pendingUser.save();
-
-
-            if (newPendingUser === null) {
-                throw new Error("Pending user not created");
+           
+            
+            const isFaculty = Number(data.registerOption) === 3 && refType === "faculty";
+            if(!isFaculty) {
+               const pendingUser = new PendingUser({ user: newUser._id });
+                const newPendingUser = await pendingUser.save();
+                if(!newPendingUser) {
+                    throw new Error("New Pending User not created");
+                }
             }
-
-
+            
+           
+            
             const msg = `user with id: ${newUser._id} created successfully`;
             console.log(msg);
-
+            
           
 
             res.json({ message: msg, status: "success"});
+
 
             // console.log(data.registerOption);
             if (isNitUser && email.endsWith("@nitj.ac.in")) {
@@ -283,15 +295,15 @@ if (!url) {
                         }
                     })];
 
-                   if(data.refType !== 'faculty') {
+                   if(refType !== 'faculty') {
                     promises.push(axios.get(`${REMOTE_URL}/email/adminNotification/${encodeURIComponent(actualData.name)}/${encodeURIComponent(actualData.email)}/${encodeURIComponent(actualData.phone)}/${encodeURIComponent(actualData.address)}/${encodeURIComponent(actualData.refInfo)}/${encodeURIComponent(refName)}}`))
                    }
 
-                    if(data.refType === "faculty") {
+                    if(refType === "faculty") {
                         promises.push(axios.post(`${REMOTE_URL}/email/reference-confirmation`, {
                             name: actualData.name,
-                            applicantEmail: actualData.email,
-                            referenceEmail: data.FacultyEmail,
+                            applicantEmail: actualData.email.toLowerCase(),
+                            referenceEmail: data.FacultyEmail.toLowerCase(),
                             refType: "faculty"
                         },
                             {
